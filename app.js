@@ -68,6 +68,9 @@ app.patch('/articles/:title', (req, res) => {
 
     // })
 })
+app.delete('/articles', async (req, res) => {
+
+})
 
 app.delete('/articles/:title', async (req, res) => {
     console.log(req.params.title)
