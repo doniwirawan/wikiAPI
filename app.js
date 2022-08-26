@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const ejs = require('ejs')
 const { urlencoded } = require('body-parser')
 
-mongoose.connect('mongodb://localhost:27017/wikiDB', { useNewUrlParser: true })
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
 
 const articleSchema = {
     title: String,
