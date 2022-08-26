@@ -25,8 +25,12 @@ app.use(express.static('public'))
 // todolist ada disini
 app.get('/articles', (req, res) => {
     Article.find({}, (err, foundArticles) => {
-        res.send(foundArticles)
-        console.log(foundArticles)
+        if (!err) {
+            res.send(foundArticles)
+            console.log(foundArticles)
+        } else {
+            res.send(err)
+        }
     })
 })
 
@@ -37,6 +41,8 @@ app.get('/articles/:title', async (req, res) => {
         if (!err) {
             res.send(foundArticles)
             console.log(foundArticles)
+        } else {
+            res.send(err)
         }
 
     })
