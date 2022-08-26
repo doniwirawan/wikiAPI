@@ -24,7 +24,10 @@ app.use(express.static('public'))
 
 // todolist ada disini
 app.get('/articles', (req, res) => {
-    console.log('fetch all articles')
+    Article.find({}, (err, foundArticles) => {
+        res.send(foundArticles)
+        console.log(foundArticles)
+    })
 })
 
 app.get('/articles/:title', (req, res) => {
@@ -32,10 +35,7 @@ app.get('/articles/:title', (req, res) => {
 })
 
 app.post('articles', (req, res) => {
-    Article.find({}, (err, foundArticles) => {
-        res.send(foundArticles)
-        console.log(foundArticles)
-    })
+
 })
 
 app.put('/articles/:title', (req, res) => {
