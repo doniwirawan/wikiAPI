@@ -83,7 +83,13 @@ app.patch('/articles/:title', (req, res) => {
     // })
 })
 app.delete('/articles', async (req, res) => {
-
+    Article.deleteMany((err) => {
+        if (!err) {
+            res.send('successfully deleted all articles')
+        } else {
+            console.log(err)
+        }
+    })
 })
 
 app.delete('/articles/:title', async (req, res) => {
