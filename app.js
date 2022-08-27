@@ -98,7 +98,7 @@ app.route('/articles/:title')
     .delete(async (req, res) => {
         console.log(req.params.title)
         const title = req.params.title
-        Article.findOneAndDelete({ title }, (err, articles) => {
+        Article.deleteOne({ title }, (err, articles) => {
             if (!err) {
                 res.send("Successfully deleted selected article.");
             } else {
