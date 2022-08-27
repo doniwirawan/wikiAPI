@@ -23,90 +23,78 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static('public'))
 
-// todolist ada disini
-app.get('/articles', (req, res) => {
-    Article.find({}, (err, foundArticles) => {
-        if (!err) {
-            res.send(foundArticles)
-            console.log(foundArticles)
-        } else {
-            res.send(err)
-        }
+app.route('/articles')
+    .get((req, res) => {
+        Article.find({}, (err, foundArticles) => {
+            if (!err) {
+                res.send(foundArticles)
+                console.log(foundArticles)
+            } else {
+                res.send(err)
+            }
+        })
     })
-})
+    .post((req, res) => {
+        // console.log(req.body.title)
+        // console.log(req.body.content)
+        const newArticle = new Article({
+            title: req.body.title,
+            content: req.body.content
+        })
 
-app.get('/articles/:title', async (req, res) => {
-    console.log(req.params.title)
-    const title = req.params.title
-    Article.findOne({ title }, (err, foundArticles) => {
-        if (!err) {
-            res.send(foundArticles)
-            console.log(foundArticles)
-        } else {
-            res.send(err)
-        }
-
+        newArticle.save((err) => {
+            if (!err) {
+                res.send(newArticle)
+            } else {
+                res.send(err)
+            }
+        })
     })
-})
-
-app.post('/articles', (req, res) => {
-    // console.log(req.body.title)
-    // console.log(req.body.content)
-    const newArticle = new Article({
-        title: req.body.title,
-        content: req.body.content
+    .delete((req, res) => {
+        Article.deleteMany((err) => {
+            if (!err) {
+                res.send('successfully deleted all articles')
+            } else {
+                console.log(err)
+            }
+        })
     })
 
-    newArticle.save((err) => {
-        if (!err) {
-            res.send(newArticle)
-        } else {
-            res.send(err)
-        }
+
+app.route('/articles/:title')
+    .get((req, res) => {
+        console.log(req.params.title)
+        const title = req.params.title
+        Article.findOne({ title }, (err, foundArticles) => {
+            if (!err) {
+                res.send(foundArticles)
+                console.log(foundArticles)
+            } else {
+                res.send(err)
+            }
+
+        })
     })
-})
-
-app.put('/articles/:title', (req, res) => {
-    console.log(req.params.title)
-})
-
-app.patch('/articles/:title', (req, res) => {
-    console.log(req.params.title)
-    const title = req.params.title
-    // Article.findOneandUpdate({ title }, (err, foundArticles) => {
-    //     if (!err) {
-    //         res.send(foundArticles)
-    //         console.log(foundArticles)
-    //         res.redirect('/')
-    //     }
-
-    // })
-})
-app.delete('/articles', async (req, res) => {
-    Article.deleteMany((err) => {
-        if (!err) {
-            res.send('successfully deleted all articles')
-        } else {
-            console.log(err)
-        }
+    .put((req, res) => {
+        console.log(req.params.title)
     })
-})
-
-app.delete('/articles/:title', async (req, res) => {
-    console.log(req.params.title)
-    const title = req.params.title
-    Article.findOneandDelete({ title }, (err, foundArticles) => {
-        if (!err) {
-            res.send(foundArticles)
-            console.log(foundArticles)
-            res.redirect('/')
-        }
+    .patch((req, res) => {
+        console.log(req.params.title)
+        const title = req.params.title
 
     })
-})
+    .delete(async (req, res) => {
+        console.log(req.params.title)
+        const title = req.params.title
+        Article.findOneandDelete({ title }, (err, foundArticles) => {
+            if (!err) {
+                res.send(foundArticles)
+                console.log(foundArticles)
+                res.redirect('/')
+            }
 
-
-
+        })
+    })
 
 app.listen(process.env.PORT || 3000, function (err, res) {
     if (!err) {
