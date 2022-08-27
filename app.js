@@ -9,7 +9,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
 
 const articleSchema = {
     title: String,
-    body: String
+    content: String
 }
 
 const Article = new mongoose.model('Article', articleSchema)
@@ -20,6 +20,7 @@ app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({
     extended: true
 }))
+
 app.use(express.static('public'))
 
 // todolist ada disini
@@ -48,8 +49,21 @@ app.get('/articles/:title', async (req, res) => {
     })
 })
 
-app.post('articles', (req, res) => {
+app.post('/articles', (req, res) => {
+    // console.log(req.body.title)
+    // console.log(req.body.content)
+    const newArticle = new Article({
+        title: req.body.title,
+        content: req.body.content
+    })
 
+    newArticle.save((err) => {
+        if (!err) {
+            res.send(newArticle)
+        } else {
+            res.send(err)
+        }
+    })
 })
 
 app.put('/articles/:title', (req, res) => {
