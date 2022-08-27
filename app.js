@@ -63,7 +63,7 @@ app.route('/articles')
 
 app.route('/articles/:title')
     .get((req, res) => {
-        console.log(req.params.title)
+        // console.log(req.params.title)
         const title = req.params.title
         Article.findOne({ title }, (err, foundArticles) => {
             if (!err) {
@@ -76,7 +76,17 @@ app.route('/articles/:title')
         })
     })
     .put((req, res) => {
-        console.log(req.params.title)
+        // console.log(req.params.title)
+        const title = req.params.title
+        Article.updateOne({ title }, { title: req.body.title, content: req.body.content }, { overwrite: true }, (err, foundArticles) => {
+            if (!err) {
+                res.send(foundArticles)
+                console.log(foundArticles)
+            } else {
+                res.send(err)
+            }
+
+        })
     })
     .patch((req, res) => {
         console.log(req.params.title)
