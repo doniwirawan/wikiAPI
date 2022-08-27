@@ -25,37 +25,35 @@ app.use(express.static('public'))
 
 app.route('/articles')
     .get((req, res) => {
-        Article.find({}, (err, foundArticles) => {
-            if (!err) {
-                res.send(foundArticles)
-                console.log(foundArticles)
+        Article.find({}, (err, articles) => {
+            if (articles) {
+                const jsonArticles = JSON.stringify(articles);
+                res.send(jsonArticles);
             } else {
-                res.send(err)
+                res.send("No articles currently in wikiDB.");
             }
         })
     })
     .post((req, res) => {
-        // console.log(req.body.title)
-        // console.log(req.body.content)
-        const newArticle = new Article({
+        const newArticle = Article({
             title: req.body.title,
             content: req.body.content
         })
 
         newArticle.save((err) => {
             if (!err) {
-                res.send(newArticle)
+                res.send("Successfully added a new article.");
             } else {
-                res.send(err)
+                res.send(err);
             }
         })
     })
     .delete((req, res) => {
         Article.deleteMany((err) => {
             if (!err) {
-                res.send('successfully deleted all articles')
+                res.send("Successfully deleted all the articles in wikiDB.");
             } else {
-                console.log(err)
+                res.send(err);
             }
         })
     })
@@ -65,12 +63,12 @@ app.route('/articles/:title')
     .get((req, res) => {
         // console.log(req.params.title)
         const title = req.params.title
-        Article.findOne({ title }, (err, foundArticles) => {
-            if (!err) {
-                res.send(foundArticles)
-                console.log(foundArticles)
+        Article.findOne({ title }, (err, articles) => {
+            if (article) {
+                const jsonArticle = JSON.stringify(article);
+                res.send(jsonArticle);
             } else {
-                res.send(err)
+                res.send("No article with that title found.");
             }
 
         })
@@ -78,29 +76,33 @@ app.route('/articles/:title')
     .put((req, res) => {
         // console.log(req.params.title)
         const title = req.params.title
-        Article.updateOne({ title }, { title: req.body.title, content: req.body.content }, { overwrite: true }, (err, foundArticles) => {
+        Article.update({ title }, { title: req.body.title, content: req.body.content }, { overwrite: true }, (err, articles) => {
             if (!err) {
-                res.send(foundArticles)
-                console.log(foundArticles)
+                res.send("Successfully updated selected article.");
             } else {
-                res.send(err)
+                res.send(err);
+            }
+        })
+    })
+    .patch((req, res) => {
+        const title = req.params.title
+        Article.update({ title }, { $set: req.body }, (err, articles) => {
+            if (!err) {
+                res.send("Successfully updated the content of the selected article.");
+            } else {
+                res.send(err);
             }
 
         })
     })
-    .patch((req, res) => {
-        console.log(req.params.title)
-        const title = req.params.title
-
-    })
     .delete(async (req, res) => {
         console.log(req.params.title)
         const title = req.params.title
-        Article.findOneandDelete({ title }, (err, foundArticles) => {
+        Article.findOneAndDelete({ title }, (err, articles) => {
             if (!err) {
-                res.send(foundArticles)
-                console.log(foundArticles)
-                res.redirect('/')
+                res.send("Successfully deleted selected article.");
+            } else {
+                res.send(err);
             }
 
         })
